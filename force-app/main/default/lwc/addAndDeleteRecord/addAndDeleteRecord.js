@@ -36,10 +36,10 @@ export default class AddAndDeleteRecord extends LightningElement {
     }
 
     handleNameChange() {
-        nm = this.detail.value;
+        this.nm = event.target.value;
     }
 
     handleEmailChange() {
-        em = this.detail.value;
+        this.em = event.target.value;
     }
 }

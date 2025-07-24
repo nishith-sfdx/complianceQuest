@@ -1,0 +1,45 @@
+<template>
+    <lightning-card title="Contacts">
+        <template if:true={records}>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={records} for:item="record">
+                    <tr key={record.Id}>
+                        <td>
+                            <div>{record.Name}</div>
+                        </td>
+                        <td>
+                            <div>{record.Email}</div>
+                        </td>
+                        <td>
+                            <div><lightning-button label="Delete" onclick={handleDeleteClick}></lightning-button></div>
+                        </td>
+                    </tr>
+                </template>
+                    <tr>
+                        <td>
+                            <div>
+                                <lightning-input label="Name" onchange={handleNameChange}></lightning-input>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <lightning-input label="Email" onchange={handleEmailChange}></lightning-input>
+                            </div>
+                        </td>
+                    </tr>
+            </tbody>
+            <lightning-button label="Add Contact" onclick={handleAddClick}></lightning-button>
+            
+        
+        </template>
+        <template if:false={error}>
+            <p>Error occured: {error}</p>
+        </template>
+    </lightning-card>
+</template>

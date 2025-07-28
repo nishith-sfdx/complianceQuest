@@ -15,6 +15,7 @@ export default class CompleteReview extends LightningElement {
 
     isProcessing = false;
     hasAccess = false;
+    isReviewCompleted = false;
 
     selectedResolution = '';
     resolutionOptions = [];
@@ -38,9 +39,13 @@ export default class CompleteReview extends LightningElement {
     }
 
     @wire(hasReviewAccess, { recordId: '$recordId' })
-    accessCheck({ error, data }) {
+    accessAndRecordCheck({ error, data }) {
         if(data) {
             this.hasAccess = data;
+            this.selectedResolution = data.CQ_Resolution__c || '';
+            this.isReviewCompleted = (data.CQ_Status__c === 'Resolved');
+        } else if (data === null) {
+            this.hasAccess = false;
         } else if(error) {
             console.error(error);
         }

@@ -1,24 +1,30 @@
 public with sharing class FeedbackReviewController {
     
     @AuraEnabled(Cacheable=true)
-    public static Boolean hasReviewAccess(Id recordId) {
+    public static SQX_Complaint_Feedback__c hasReviewAccess(Id recordId) {
 
         if(recordId == null) {
             throw new AuraHandledException('RecordId is null ');
         }
 
-        Id currentUserID = UserInfo.getUserId();
+        SQX_Complaint_Feedback__c feedbackRecord;
 
         // 1. Checking if the current user is the owner of the record
-        SQX_Complaint_Feedback__c feedback = [
-            SELECT Id, OwnerId
+        feedbackRecord = [
+            SELECT Id, OwnerId, CQ_Resolution__c, CQ_Status__c
             FROM SQX_Complaint_Feedback__c
             WHERE Id = :recordId
             LIMIT 1
         ];
 
-        if (feedback != null && feedback.OwnerId == currentUserID) {
-            return true;
+        if (feedbackRecord == null) {
+            return null;
+        }
+
+        Id currentUserID = UserInfo.getUserId();
+
+        if(feedbackRecord.OwnerId == currentUserID) {
+            return feedbackRecord;
         }
 
         // 2. Checking if the current user is a member of the 'Customer Success Team' Queue
@@ -55,14 +61,14 @@ public with sharing class FeedbackReviewController {
                     ];
 
                     if(!queueMembers.isEmpty()) {
-                        return true;
+                        return feedbackRecord;
                     }
                 } catch (QueryException qe) {
                     throw new AuraHandledException('Error: ' + qe.getMessage());
                 }
             }
 
-        return false;
+        return null;
     }
 
     @AuraEnabled

@@ -8,6 +8,7 @@
                     value={selectedResolution}
                     options={resolutionOptions}
                     onchange={handleResolutionChange}
+                    disabled={isReviewCompleted}
                     required                
                 ></lightning-combobox>
 
@@ -17,6 +18,9 @@
                     variant="brand"
                     disabled={isProcessing}
                 ></lightning-button>
+                <template if:true={isReviewCompleted}>
+                    <p><strong>This feedback has been reviewed and resolved.</strong></p>
+                </template>
             </template>
             <template if:false={hasAccess}>
                 <p class="slds-p-around_small slds-text-color_error">You do not have access to perform this action.</p>

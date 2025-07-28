@@ -1,53 +1,90 @@
+<!-- feedbackForm.html -->
 <template>
-    <lightning-card title="Complaint Feedback Form" icon-name="utility:form">
-        <template if:true={loaded}>
-            <div class="slds-p-around_medium">
+    <lightning-card title="Customer Feedback Form" icon-name="utility:form">
+        <div class="slds-p-around_medium">
+            <!-- Use isLoading for spinner and main content visibility -->
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center">
+                    <lightning-spinner alternative-text="Loading feedback form..." size="medium"></lightning-spinner>
+                </div>
+            </template>
 
-                <lightning-input label="Complaint Number" value={complaintNumber} disabled></lightning-input>
+            <template if:false={isLoading}>
+                <!-- Show form if feedbackRecord is available and not yet submitted -->
+                <template if:true={feedbackRecord}>
+                    <p class="slds-text-heading_medium slds-m-bottom_small">Complaint Details</p>
+                    <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_large">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-input label="Complaint Number" value={complaintNumber} read-only disabled></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-input label="Complaint Title" value={complaintTitle} read-only disabled></lightning-input>
+                        </div>
+                    </div>
 
-                <lightning-input label="Complaint Title" value={complaintTitle} disabled></lightning-input>
+                    <p class="slds-text-heading_medium slds-m-top_large slds-m-bottom_small">Your Feedback</p>
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-combobox
+                                label="Is the Issue Resolved?"
+                                value={issueResolved}
+                                placeholder="Select an option"
+                                options={issueResolvedOptions}
+                                onchange={handleResolvedChange}
+                                required
+                                class="slds-m-bottom_small"
+                            ></lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-combobox
+                                label="Your Experience"
+                                value={yourExperience}
+                                placeholder="Select your experience"
+                                options={yourExperienceOptions}
+                                onchange={handleYourExperienceChange}
+                                required
+                                class="slds-m-bottom_small"
+                            ></lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Additional Comment"
+                                value={additionalComment}
+                                onchange={handleCommentChange}
+                                placeholder="Enter your comments here..."
+                                class="slds-m-bottom_large"
+                            ></lightning-textarea>
+                        </div>
+                    </div>
 
-                <lightning-combobox
-                    label="Is the Issue Resolved?"
-                    value={issueResolved}
-                    options={issueResolvedOptions}
-                    onchange={handleResolvedChange}
-                    required
-                ></lightning-combobox>
-
-                <lightning-combobox
-                    label="Your Experience"
-                    value={yourExperience}
-                    options={yourExperienceOptions}
-                    onchange={handleYourExperienceChange}
-                    required
-                ></lightning-combobox>
-
-                <lightning-textarea
-                    label="Additional Comments"
-                    value={additionalComment}
-                    onchange={handleCommentChange}
-                    placeholder="Enter your comments here..."
-                ></lightning-textarea>
-
-                <lightning-button 
-                    label="Submit Feedback" 
-                    onclick={handleSubmit} 
-                    disabled={isSubmitting}
-                    variant="brand"
-                ></lightning-button>
-
-            </div>
-        </template>
-        <template if:true={isSubmitted}>
-            <div class="slds-p-around_medium">
-                <p><strong>Thank You for Your Feedback</strong></p>
-                <p><strong>Your feedback has been successfully submitted.</strong></p>
-            </div>
-        </template>
-
-        <template if:false={loaded}>
-            <lightning-spinner alternative-text="Loading feedback form..." size="medium"></lightning-spinner>
-        </template>
-    </lightning-card>    
+                    <div class="slds-m-top_large slds-align_absolute-center">
+                        <lightning-button
+                            label="Submit Feedback"
+                            onclick={handleSubmit}
+                            disabled={isSubmitting}
+                            variant="brand"
+                        ></lightning-button>
+                    </div>
+                </template>
+                <!-- Show thank you message if submitted -->
+                <template if:true={isSubmitted}>
+                    <div class="slds-text-align_center slds-p-around_large">
+                        <lightning-icon icon-name="utility:success" alternative-text="Success" size="large" variant="success"></lightning-icon>
+                        <p class="slds-text-heading_large slds-m-top_small">Thank You for Your Feedback!</p>
+                        <p class="slds-text-body_regular slds-m-top_small">Your feedback has been successfully submitted.</p>
+                    </div>
+                </template>
+                <!-- Show not found message if no record AND not submitted (nested templates for AND logic) -->
+                <template if:false={feedbackRecord}>
+                    <template if:false={isSubmitted}>
+                        <div class="slds-text-align_center slds-p-around_large slds-text-color_error">
+                            <lightning-icon icon-name="utility:error" alternative-text="Error" size="large" variant="error"></lightning-icon>
+                            <p class="slds-text-heading_large slds-m-top_small">Feedback Form Not Found</p>
+                            <p class="slds-text-body_regular slds-m-top_small">Please ensure you are using a valid feedback link.</p>
+                        </div>
+                    </template>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
 </template>

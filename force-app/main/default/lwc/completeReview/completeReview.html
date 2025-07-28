@@ -1,0 +1,26 @@
+<template>
+    <lightning-card title="Complete Feedback Review" icon-name="standard:task2">
+        <div class="slds-p-around_medium">
+            <template if:true={hasAccess}>
+                <p>Mark this feedback as reviewed and set a resolution.</p>
+                <lightning-combobox
+                    label="Resolution"
+                    value={selectedResolution}
+                    options={resolutionOptions}
+                    onchange={handleResolutionChange}
+                    required                
+                ></lightning-combobox>
+
+                <lightning-button
+                    label="Complete Review"
+                    onclick={saveResolution}
+                    variant="brand"
+                    disabled={isProcessing}
+                ></lightning-button>
+            </template>
+            <template if:false={hasAccess}>
+                <p class="slds-p-around_small slds-text-color_error">You do not have access to perform this action.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

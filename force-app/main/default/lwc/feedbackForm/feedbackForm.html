@@ -1,0 +1,53 @@
+<template>
+    <lightning-card title="Complaint Feedback Form" icon-name="utility:form">
+        <template if:true={loaded}>
+            <div class="slds-p-around_medium">
+
+                <lightning-input label="Complaint Number" value={complaintNumber} disabled></lightning-input>
+
+                <lightning-input label="Complaint Title" value={complaintTitle} disabled></lightning-input>
+
+                <lightning-combobox
+                    label="Is the Issue Resolved?"
+                    value={issueResolved}
+                    options={issueResolvedOptions}
+                    onchange={handleResolvedChange}
+                    required
+                ></lightning-combobox>
+
+                <lightning-combobox
+                    label="Your Experience"
+                    value={yourExperience}
+                    options={yourExperienceOptions}
+                    onchange={handleYourExperienceChange}
+                    required
+                ></lightning-combobox>
+
+                <lightning-textarea
+                    label="Additional Comments"
+                    value={additionalComment}
+                    onchange={handleCommentChange}
+                    placeholder="Enter your comments here..."
+                ></lightning-textarea>
+
+                <lightning-button 
+                    label="Submit Feedback" 
+                    onclick={handleSubmit} 
+                    disabled={isSubmitting}
+                    variant="brand"
+                ></lightning-button>
+
+            </div>
+        </template>
+        <template if:true={isSubmitted}>
+            <div class="slds-p-around_medium">
+                <p><strong>Thank You for Your Feedback</strong></p>
+                <p><strong>Your feedback has been successfully submitted.</strong></p>
+            </div>
+        </template>
+
+        <template if:false={loaded}>
+            <lightning-spinner alternative-text="Loading feedback form..." size="medium"></lightning-spinner>
+        </template>
+    </lightning-card>    
+</template>

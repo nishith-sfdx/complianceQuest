@@ -1,0 +1,16 @@
+<template>
+    <lightning-card title="Request Customer Feedback" icon-name="utility:send">
+        <div class="slds-p-around_medium">
+            <p>Click the button below to send a feedback request to the customer.</p>
+            <template if:true={hasAccess}>
+                <lightning-button label="Send Feedback Request" onclick={handleClick} variant="brand"></lightning-button>
+                <template if:true={isProcessing}>
+                    <lightning-spinner alternative-text="Sending Request..." size="small"></lightning-spinner>
+                </template>
+            </template>
+            <template if:false={hasAccess}>
+                <p class="slds-p-around_small">You do not have permission to request feedback.</p>
+            </template>
+        </div>
+    </lightning-card>    
+</template>
